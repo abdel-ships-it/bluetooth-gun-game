@@ -16,7 +16,7 @@ import { Highscore } from '../highscores/highscores.page';
 })
 export class GamePage implements OnInit, OnDestroy {
 
-  GAME_TIME = 60;
+  GAME_TIME = 45;
 
   timeLeft: {
     secondsLeft: number;
@@ -170,10 +170,11 @@ export class GamePage implements OnInit, OnDestroy {
             map(data => data.size)
           ).toPromise();
 
+        const newHighScore = await this.isNewHighscore(this.killsCount);
 
         const ionAlert = await this.alertCtrl.create({
-          header: 'Time is up',
-          message: 'Please fill in your name for highscores',
+          header: `Time is up ${newHighScore ? ',New highscore!' : null}`,
+          message: 'Please fill in your name for the highscores',
           inputs: [{
             label: 'Name',
             value: `Player ${documentsNumber + 1}`,
@@ -210,6 +211,17 @@ export class GamePage implements OnInit, OnDestroy {
     } finally {
       this.router.navigate(['../highscores']);
     }
+  }
+
+  private async isNewHighscore(kills: number): Promise<boolean> {
+    const highscores = await this.angularFirestore.collection('highscore').get().pipe(
+      first(),
+      map(data => (data.docs || []).map( doc => doc.data() as Highscore ))
+    ).toPromise();
+
+    const isNewHighscore = highscores.every( highscore => highscore.kills < kills );
+
+    return isNewHighscore;
   }
 
   @HostListener('click') start() {
