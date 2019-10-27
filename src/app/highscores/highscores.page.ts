@@ -17,7 +17,8 @@ export interface Highscore {
 export class HighscoresPage implements OnInit {
 
   public highscores$: Observable<Highscore[]> = this.angularFirestore.collection('highscore').valueChanges().pipe(
-    map(value => value as Highscore[])
+    map(highscores => highscores as Highscore[]),
+    map( highscores => highscores.sort((a,b) => b.kills - a.kills))
   );
 
   constructor(private angularFirestore: AngularFirestore) { }
