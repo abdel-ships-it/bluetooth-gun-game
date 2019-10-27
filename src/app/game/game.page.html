@@ -1,0 +1,28 @@
+<ion-row class="background">
+  <div class="border"></div>
+  <img src="../../assets/overlay.png" alt="">
+  <div class="border"></div>
+</ion-row>
+
+
+<ion-row class="ion-justify-content-between overlay">
+  <div class="stat">
+    <div class="label-big">{{ shotsCount }}</div>
+    <div class="label-small">Shots</div>
+  </div>
+
+  <div class="stat ion-margin-right">
+    <div class="label-big">{{ killsCount }}</div>
+    <div class="label-small">Kills</div>
+  </div>
+
+</ion-row>
+
+<div class="stat time">
+  <div class="label-med">{{ timeLeft.label }}</div>
+  <div class="label-small">Time left</div>
+</div>
+
+<div class="feedback arcade">
+  {{ feedback }}
+</div>

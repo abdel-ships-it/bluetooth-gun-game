@@ -1,0 +1,32 @@
+From 296031ff4d9903142abbdaab5ff26e46d1e86064 Mon Sep 17 00:00:00 2001
+From: Arne de Bree <arne@de-bree.nl>
+Date: Tue, 17 Apr 2018 10:02:57 +0200
+Subject: [PATCH] feat(scandit): move the picker to the back of the viewstack,
+ behind the webview so we can mask the camera instead of being above the app
+
+---
+ .../scandit-barcodescanner-phonegap_5.7.0/src/ios/ScanditSDK.mm   | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/plugin_src/scandit-barcodescanner-phonegap_5.7.0/src/ios/ScanditSDK.mm b/plugin_src/scandit-barcodescanner-phonegap_5.7.0/src/ios/ScanditSDK.mm
+index 7d7d9dc..60c7896 100644
+--- a/plugin_src/scandit-barcodescanner-phonegap_5.7.0/src/ios/ScanditSDK.mm
++++ b/plugin_src/scandit-barcodescanner-phonegap_5.7.0/src/ios/ScanditSDK.mm
+@@ -171,6 +171,14 @@ - (void)showPickerWithSettings:(NSDictionary *)settings
+                 self.modallyPresented = NO;
+                 [self.viewController addChildViewController:picker];
+                 [self.viewController.view addSubview:self.picker.view];
++
++                // START PATCH - ABR - 20180417
++                [self.viewController.view bringSubviewToFront:self.webView];
++
++                [self.webView setBackgroundColor:[UIColor clearColor]];
++                [self.webView setOpaque:(NO)];
++                // END PATCH - ABR - 20180417
++
+                 [picker didMoveToParentViewController:self.viewController];
+ 
+                 [SBSPhonegapParamParser updateLayoutOfPicker:self.picker
+-- 
+2.15.1 (Apple Git-101)
+

@@ -1,14 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<img class="hero" src="../../assets/splash.png" alt="">
 
-<ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
-</ion-content>
+<ion-row class="icon-button-container ion-justify-content-between">
+  <button class="arcade">
+    <img src="../../assets/settings.svg" alt="">
+  </button>
+  <button class="arcade" [routerLink]="['../highscores']">
+    <img src="../../assets/Highscore.svg" alt="">
+  </button>
+</ion-row>
+
+<button class="start arcade" (click)="connectToGun()">
+  START
+</button>

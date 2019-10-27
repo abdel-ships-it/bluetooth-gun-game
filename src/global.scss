@@ -24,3 +24,61 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+@font-face {
+  font-family: 'arcade-classic';
+  src: url(assets/arcade-classic.ttf);
+}
+
+:root {
+  --size-header: 40px;
+  --accent: #05C7C7;
+}
+
+body {
+  color: white;
+}
+
+h1 {
+  font-size: var(--size-header);
+}
+h2 {
+  font-size: 25px;
+}
+
+h1, h2, .arcade {
+  font-family: 'arcade-classic';
+  text-transform: uppercase;
+}
+
+button.arcade {
+	box-sizing: border-box;
+	height: 53px;
+	border: 1px solid var(--accent);
+	border-radius: 2px;
+  background-color: rgba(29,11,67,0.56);
+  font-size: var(--size-header) !important;
+  transition: 100ms;
+  color: white;
+  text-align: center;
+}
+
+button:active, button:focus {
+  transform: scale(1.2);
+}
+
+.icon-button-container {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  right: 25px;
+  button {
+    width: 53px;
+    height: 53px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+}
+

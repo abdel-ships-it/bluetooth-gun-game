@@ -1,1 +1,15 @@
+.text {
+  font-family: 'arcade-classic';
+}
 
+img.hero {
+  height: 100%;
+  object-fit: cover;
+}
+
+button.start {
+  position: fixed;
+  left: 50%;
+  bottom: 25px;
+  margin-left: -95px;
+}

@@ -1,0 +1,22 @@
+<ion-row class="icon-button-container ion-align-items-center">
+  <h1>Highscores</h1>
+
+  <button class="arcade" [routerLink]="['../home']">
+    <img src="../../assets/close.svg" alt="close">
+  </button>
+
+</ion-row>
+
+
+<div class="highscores-container">
+  <ion-row
+    class="ion-justify-content-between"
+    *ngFor="let highscore of (highscores$ | async); let index = index, let last = last"
+    [class.underline]="!last"
+  >
+    <h2 class="name"> {{ index + 1 }}. {{ highscore.playerName }}</h2>
+    <h2 class="shots">{{ highscore.shots }} shots</h2>
+    <h2 class="kills"> {{ highscore.kills }} kills</h2>
+  </ion-row>
+</div>
+

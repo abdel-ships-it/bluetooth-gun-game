@@ -1,5 +1,7 @@
 {
   "name": "bluetooth-gun-game",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

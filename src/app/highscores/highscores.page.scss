@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  background: url('../../assets/splascreen-no-eva.png') no-repeat;
+  background-size: cover;
+}
+
+h1 {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.icon-button-container {
+  position: relative;
+  top: 25px;
+  left: 25px;
+  right: 25px;
+  width: calc(100% - 50px);
+
+  button {
+    margin-left: auto;
+  }
+}
+
+.highscores-container {
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  height: 225px;
+  background-color: rgba(29,11,67,0.56);
+  margin: 50px 25px 35px 25px;
+  overflow-y: scroll;
+  padding: 31px 28px 35px 28px;
+
+  ion-row {
+    padding: 0px 12px;
+
+    &.underline {
+      border-bottom: 1px solid var(--accent);
+    }
+  }
+}

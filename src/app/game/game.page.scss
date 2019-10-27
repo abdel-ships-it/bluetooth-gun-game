@@ -1,0 +1,73 @@
+:host {
+  display: block;
+  font-family: 'arcade-classic';
+  background-color: rgba(0,0,0, .35);
+  --font-size-big: 90px;
+  --font-size-medium: 44px;
+  --font-size-small: 19px;
+}
+
+.background {
+  height: 100%;
+  .border {
+    background-color: rgba(0,0,0, .35);
+    width: 25%;
+    height: 100%;
+  }
+
+  img {
+    object-fit: cover;
+    width: 50%;
+    height: 100%;
+    margin: 0 auto;
+    display: block;
+  }
+
+}
+
+
+ion-row.overlay {
+  padding: 23px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.stat {
+  color: white;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .label-big {
+	  font-size: var(--font-size-big);
+	  text-align: center;
+  }
+
+
+  .label-med {
+    font-size: var(--font-size-medium);
+  }
+
+  .label-small {
+    font-size: var(--font-size-small);
+    text-transform: uppercase;
+  }
+}
+
+
+.time {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.feedback {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  word-spacing: 5px;
+}
