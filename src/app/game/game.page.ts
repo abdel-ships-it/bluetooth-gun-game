@@ -66,6 +66,12 @@ export class GamePage implements OnInit, OnDestroy {
 
   async ngOnInit() {
     try {
+      // This will be true the second time the barcode is used
+      //
+      if ( this.barcodeScanner.isCollapsed ) {
+        this.barcodeScanner.expand();
+      }
+
       await this.barcodeScanner.startScan();
 
       console.log('start scan called...');
