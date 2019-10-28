@@ -81,7 +81,8 @@ export class GamePage implements OnInit, OnDestroy {
 
     this.barcodeScanner.pauseScan();
 
-    const soundEffect = new Audio('../../assets/blaster-ricochet.wav');
+    const soundEffectHit = new Audio('../../assets/laser-hit.wav');
+    const soundEffectMiss = new Audio('../../assets/laser-miss.wav');
 
     const barcodeScannerSubscription = this.barcodeScanner.data$
     .pipe(
@@ -98,15 +99,21 @@ export class GamePage implements OnInit, OnDestroy {
         console.log('You already killed this monster');
 
         this.feedback = 'You already killed this monster';
+
+        try {
+          await soundEffectMiss.play();
+        } catch ( error ) {
+          console.error('Error playing sound effect miss', error);
+        }
       } else {
         this.feedback = 'Kill!';
 
         console.log('kill!');
 
         try {
-          await soundEffect.play();
+          await soundEffectHit.play();
         } catch ( error ) {
-          console.error('Error playing sound effect');
+          console.error('Error playing sound effect hit', error);
         }
 
         this.killSet.add(barcode);
