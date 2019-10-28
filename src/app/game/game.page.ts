@@ -179,7 +179,7 @@ export class GamePage implements OnInit, OnDestroy {
         const newHighScore = await this.isNewHighscore(this.killsCount);
 
         const ionAlert = await this.alertCtrl.create({
-          header: `Time is up ${newHighScore ? ',New highscore!' : null}`,
+          header: `Time is up ${newHighScore ? ',New highscore!' : ''}`,
           message: 'Please fill in your name for the highscores',
           inputs: [{
             label: 'Name',
