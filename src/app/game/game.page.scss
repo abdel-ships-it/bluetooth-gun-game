@@ -13,6 +13,7 @@
     background-color: rgba(0,0,0, .35);
     width: 25%;
     height: 100%;
+    z-index: 1;
   }
 
   img {
@@ -41,6 +42,7 @@ ion-row.overlay {
   display: flex;
   align-items: center;
   flex-direction: column;
+  z-index: 2;
 
   .label-big {
 	  font-size: var(--font-size-big);
