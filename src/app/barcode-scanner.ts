@@ -123,8 +123,6 @@ export class BarcodeScannerProvider {
 
         overlay.setBeepEnabled(false);
 
-        overlay.setVibrateEnabled(false);
-
         this.scanditPicker.show({
           didScan: (session: any) => {
             console.log('Scandit result', session);
