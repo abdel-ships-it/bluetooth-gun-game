@@ -81,8 +81,8 @@ export class GamePage implements OnInit, OnDestroy {
 
     this.barcodeScanner.pauseScan();
 
-    const soundEffectHit = new Audio('../../assets/laser-hit.wav');
-    const soundEffectMiss = new Audio('../../assets/laser-miss.wav');
+    const laserEffect = new Audio('../../assets/laser.wav');
+    const hitEffect = new Audio('../../assets/hit.wav');
 
     const barcodeScannerSubscription = this.barcodeScanner.data$
     .pipe(
@@ -99,24 +99,16 @@ export class GamePage implements OnInit, OnDestroy {
         console.log('You already killed this monster');
 
         this.feedback = 'You already killed this monster';
-
-        try {
-          await soundEffectMiss.play();
-        } catch ( error ) {
-          console.error('Error playing sound effect miss', error);
-        }
       } else {
         this.feedback = 'Kill!';
 
         console.log('kill!');
 
-        try {
-          await soundEffectHit.play();
-        } catch ( error ) {
-          console.error('Error playing sound effect hit', error);
-        }
-
         this.killSet.add(barcode);
+
+        hitEffect.play().catch( error => {
+          console.error('Error playing hit effect', error);
+        });
       }
 
     });
@@ -155,6 +147,11 @@ export class GamePage implements OnInit, OnDestroy {
       } else if ( decodedValue === up ) {
         console.log('Pausing scan');
         this.barcodeScanner.pauseScan();
+
+        laserEffect.play().catch( error => {
+          console.error('Error playing sound effect hit', error);
+        });
+
       }
 
       if ( decodedValue === up || decodedValue === down ) {
@@ -167,14 +164,21 @@ export class GamePage implements OnInit, OnDestroy {
       const unroundedMinutes = this.timeLeft.secondsLeft / 60;
       const minutes = Math.floor(unroundedMinutes);
       const seconds = Math.ceil((unroundedMinutes - Math.floor(unroundedMinutes)) * 60);
-      this.timeLeft.label = `${minutes}:${seconds}`;
+
+      const minutesLabel = minutes.toString().length === 1 ? `0${minutes}` : minutes;
+
+      const secondsLabel = seconds.toString().length === 1 ? `0${seconds}` : seconds;
+
+      this.timeLeft.label = `${minutesLabel}:${secondsLabel}`;
 
       if (this.timeLeft.secondsLeft === 0) {
+        // Clean interval
+        //
+        clearInterval(interval);
+
         barcodeScannerSubscription.unsubscribe();
 
         this.barcodeScanner.pauseScan();
-
-        clearInterval(interval);
 
         const documentsNumber = await this.angularFirestore.collection('highscore')
           .get()
