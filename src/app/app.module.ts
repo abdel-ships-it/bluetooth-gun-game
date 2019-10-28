@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -15,6 +16,9 @@ import { BluetoothGunService } from './bluetooth-gun.service';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
+import { Insomnia } from '@ionic-native/insomnia/ngx';
+import { Flashlight } from '@ionic-native/flashlight/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,11 +26,13 @@ import { environment } from 'src/environments/environment';
   imports: [
     BrowserModule,
     IonicModule.forRoot({
-      animated: false
+      animated: false,
+      swipeBackEnabled: false
     }),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig, 'bluetooth-gun-game'),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    HttpClientModule
   ],
   providers: [
     StatusBar,
@@ -35,7 +41,9 @@ import { environment } from 'src/environments/environment';
     BluetoothLE,
     BarcodeScannerProvider,
     ScreenOrientation,
-    BluetoothGunService
+    BluetoothGunService,
+    Insomnia,
+    Flashlight
   ],
   bootstrap: [AppComponent]
 })
