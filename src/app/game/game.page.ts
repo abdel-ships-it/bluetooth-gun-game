@@ -4,10 +4,17 @@ import { BluetoothLE, DescriptorParams } from '@ionic-native/bluetooth-le/ngx';
 import { BluetoothGunService } from '../bluetooth-gun.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil, tap, filter, map, first } from 'rxjs/operators';
+import { takeUntil, tap, filter, map, first, take } from 'rxjs/operators';
 import { AlertController } from '@ionic/angular';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Highscore } from '../highscores/highscores.page';
+import { Insomnia } from '@ionic-native/insomnia/ngx';
+import { HttpClient } from '@angular/common/http';
+import { Flashlight } from '@ionic-native/flashlight/ngx';
+
+interface PrinterHighscore extends Highscore {
+  currentPlayer: boolean;
+}
 
 @Component({
   selector: 'app-game',
@@ -16,7 +23,7 @@ import { Highscore } from '../highscores/highscores.page';
 })
 export class GamePage implements OnInit, OnDestroy {
 
-  GAME_TIME = 45;
+  GAME_TIME = 60;
 
   timeLeft: {
     secondsLeft: number;
@@ -61,10 +68,19 @@ export class GamePage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private alertCtrl: AlertController,
     private router: Router,
-    private angularFirestore: AngularFirestore
+    private angularFirestore: AngularFirestore,
+    private insomnia: Insomnia,
+    private httpClient: HttpClient,
+    private flashlight: Flashlight
   ) { }
 
   async ngOnInit() {
+    try {
+      await this.insomnia.keepAwake();
+    } catch ( error ) {
+      console.error('[insomnia] Keep awake failed', error);
+    }
+
     try {
       // This will be true the second time the barcode is used
       //
@@ -130,8 +146,7 @@ export class GamePage implements OnInit, OnDestroy {
       console.error('unsubscribe failed', error);
     }
 
-    this.bluetoothLe.subscribe(descriptorParams)
-    .pipe(
+    const bluetoothSubscription = this.bluetoothLe.subscribe(descriptorParams).pipe(
       takeUntil(this.stop$),
       tap(operation => console.log('operation emission', operation)),
       filter(operation => operation.value != null),
@@ -144,14 +159,23 @@ export class GamePage implements OnInit, OnDestroy {
       if ( decodedValue === down ) {
         console.log('Resuming scan');
         this.barcodeScanner.resumeScan();
-      } else if ( decodedValue === up ) {
-        console.log('Pausing scan');
-        this.barcodeScanner.pauseScan();
 
-        laserEffect.play().catch( error => {
+        laserEffect.play().catch(error => {
           console.error('Error playing sound effect hit', error);
         });
 
+        this.flashlight.switchOn().catch( error => {
+          console.error('[flashlight] error turning on flashlight', error);
+        });
+
+        setTimeout(() => {
+          this.flashlight.switchOff().catch( error => {
+            console.error('[flashlight] error turning off flashlight', error);
+          });
+        }, 1000);
+      } else if ( decodedValue === up ) {
+        console.log('Pausing scan');
+        this.barcodeScanner.pauseScan();
       }
 
       if ( decodedValue === up || decodedValue === down ) {
@@ -177,6 +201,8 @@ export class GamePage implements OnInit, OnDestroy {
         clearInterval(interval);
 
         barcodeScannerSubscription.unsubscribe();
+
+        bluetoothSubscription.unsubscribe();
 
         this.barcodeScanner.pauseScan();
 
@@ -210,12 +236,12 @@ export class GamePage implements OnInit, OnDestroy {
 
         const playerName = overlayEventDetail.data.values.name;
 
-        await this.saveInDatabase(playerName);
+        await this.saveHighscore(playerName);
       }
     }, 1000);
   }
 
-  private async saveInDatabase(playerName: string) {
+  private async saveHighscore(playerName: string) {
 
     try {
       await this.angularFirestore.collection('highscore').add({
@@ -227,6 +253,30 @@ export class GamePage implements OnInit, OnDestroy {
       console.error('Error adding highscore', error);
     } finally {
       this.router.navigate(['../highscores']);
+    }
+
+    const highscores = await this.angularFirestore.collection('highscore').valueChanges().pipe(
+      map(highscoresData => highscoresData as Highscore[]),
+      map(highscoresData => highscoresData.sort((a, b) => b.kills - a.kills)),
+      first()
+    ).toPromise();
+
+    const newestHighscore = highscores.find( highscore => highscore.playerName === playerName );
+
+    if ( newestHighscore ) {
+      (newestHighscore as PrinterHighscore).currentPlayer = true;
+      newestHighscore.playerName += ' (NEW)';
+    }
+
+    try {
+      console.log('Printing highscore...', highscores);
+      await this.httpClient.post(
+        'https://europe-west1-next-agency-691ee.cloudfunctions.net/new-black-scan-and-destroy-print',
+        highscores
+      ).pipe(take(1)).toPromise();
+      console.log('Printing highscore done...');
+    } catch ( error ) {
+      console.error('Printing highscore failed', error);
     }
   }
 
@@ -245,10 +295,16 @@ export class GamePage implements OnInit, OnDestroy {
     this.barcodeScanner.startScan();
   }
 
-  ngOnDestroy() {
+  async ngOnDestroy() {
     this.barcodeScanner.collapse(0);
 
     this.stop$.next();
+
+    try {
+      await this.insomnia.allowSleepAgain();
+    } catch (error) {
+      console.error('[insomnia] allow sleep agai failed', error);
+    }
   }
 
 }
