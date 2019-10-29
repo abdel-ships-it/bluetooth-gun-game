@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="bluetooth.gun.game	" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.newblack.bluetooth.gun.game" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>EVA</name>
     <description>bluetooth gun app</description>
     <author email="abdelelmedny@gmail.com">Abdel elmedny</author>
-    <content original-src="index.html" src="http://192.168.43.252:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -121,5 +121,4 @@
     <plugin name="com.mirasense.scanditsdk.plugin" spec="/Users/abdel/hobby/bluetooth-gun-game/node_modules/com.mirasense.scanditsdk.plugin" />
     <plugin name="cordova-plugin-screen-orientation" spec="~3.0.2" />
     <allow-navigation href="http://192.168.225.99:8100" sessionid="223400bb" />
-    <allow-navigation href="http://192.168.43.252:8100" sessionid="86a747e8" />
 </widget>
